@@ -12,49 +12,87 @@
   <header>
     <h1>Interactive Periodic Table</h1>
     <div class="controls">
-      <button id="themeToggle">🌙 Dark Mode</button>
-      <button id="heatmapToggle">🧪 Toggle Atomic Mass Heatmap</button>
-      <input type="text" id="searchInput" placeholder="Search by name, symbol, or atomic number" />
+<div class="top-right-controls">
+  <button id="themeToggle" aria-label="Toggle theme">
+    <span id="themeIcon">
+      <!-- Moon SVG (default, for light mode) -->
+      <svg id="moonIcon" width="28" height="28" viewBox="0 0 24 24" fill="none">
+        <path d="M21 12.79A9 9 0 0111.21 3a7 7 0 100 18 9 9 0 009.79-8.21z" fill="#222"/>
+      </svg>
+      <!-- Sun SVG (hidden by default) -->
+      <svg id="sunIcon" width="28" height="28" viewBox="0 0 24 24" fill="none" style="display:none;">
+        <circle cx="12" cy="12" r="5" fill="#FFD600"/>
+        <g stroke="#FFD600" stroke-width="2">
+          <line x1="12" y1="1" x2="12" y2="4"/>
+          <line x1="12" y1="20" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="4" y2="12"/>
+          <line x1="20" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </g>
+      </svg>
+    </span>
+  </button>
+  <button id="heatmapToggle" aria-label="Toggle Atomic Mass Heatmap">
+    <svg id="flaskIcon" width="28" height="28" viewBox="0 0 24 24" fill="none">
+      <path d="M7 2h10M9 2v5.343a2 2 0 0 1-.586 1.414l-4.95 4.95A5 5 0 0 0 7 21h10a5 5 0 0 0 3.536-8.293l-4.95-4.95A2 2 0 0 1 15 7.343V2" stroke="#222" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M8 16h8" stroke="#222" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  </button>
+</div>
+<div class="top-left-search">
+  <button id="searchToggle" aria-label="Search">
+    <!-- Magnifying glass SVG -->
+    <svg id="searchIcon" width="28" height="28" viewBox="0 0 24 24" fill="none">
+      <circle cx="11" cy="11" r="7" stroke="#222" stroke-width="2"/>
+      <line x1="16.5" y1="16.5" x2="21" y2="21" stroke="#222" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  </button>
+  <input type="text" id="searchInput" placeholder="Search..." autocomplete="off" />
+</div>
+      
     </div>
   </header>
 
-<div class="grid-container">
-  <div class="group-numbers"></div>
+  <div class="periodic-wrapper">
+    <div class="grid-container">
+      <div class="group-numbers"></div>
+      <div class="periodic-table-with-labels">
+        <div class="period-numbers"></div>
+        <div class="periodic-table" id="table"></div>
+      </div>
+    </div>
 
-  <div class="periodic-table-with-labels">
-    <div class="period-numbers"></div>
+    <!-- F-block row aligned to main table -->
+    <div class="f-block-wrapper">
+      <div class="f-block-horizontal">
+        <div class="f-block-labels">
+          <div class="f-block-label">* Lanthanides</div>
+          <div class="f-block-label">** Actinides</div>
+        </div>
+        <div class="f-block-rows">
+          <div class="f-block-row" id="lanthanides"></div>
+          <div class="f-block-row" id="actinides"></div>
+        </div>
+      </div>
+    </div>
 
-<div class="periodic-wrapper">
-  <!-- MAIN GRID -->
-  <div class="periodic-table" id="table"></div>
-
-  <!-- CATEGORY BUTTONS UNDER MAIN TABLE -->
-  <div class="filters">
-    <button data-filter="all">All</button>
-    <button data-filter="alkali-metal">Alkali Metals</button>
-    <button data-filter="alkaline-earth-metal">Alkaline Earth Metals</button>
-    <button data-filter="transition-metal">Transition Metals</button>
-    <button data-filter="post-transition-metal">Post-Transition Metals</button>
-    <button data-filter="metalloid">Metalloids</button>
-    <button data-filter="nonmetal">Nonmetals</button>
-    <button data-filter="halogen">Halogens</button>
-    <button data-filter="noble-gas">Noble Gases</button>
-    <button data-filter="lanthanide">Lanthanides</button>
-    <button data-filter="actinide">Actinides</button>
+    <div class="filters">
+      
+      <button data-filter="alkali-metal">Alkali Metals</button>
+      <button data-filter="alkaline-earth-metal">Alkaline Earth Metals</button>
+      <button data-filter="transition-metal">Transition Metals</button>
+      <button data-filter="post-transition-metal">Post-Transition Metals</button>
+      <button data-filter="metalloid">Metalloids</button>
+      <button data-filter="nonmetal">Nonmetals</button>
+      <button data-filter="halogen">Halogens</button>
+      <button data-filter="noble-gas">Noble Gases</button>
+      <button data-filter="lanthanide">Lanthanides</button>
+      <button data-filter="actinide">Actinides</button>
+    </div>
   </div>
-
-  <!-- CLOSELY ALIGNED LANTHANIDES & ACTINIDES -->
-  <div class="bottom-section">
-    <div class="row-label">57–71</div>
-    <div class="periodic-table bottom" id="lanthanides"></div>
-  </div>
-
-  <div class="bottom-section">
-    <div class="row-label">89–103</div>
-    <div class="periodic-table bottom" id="actinides"></div>
-  </div>
-</div>
-
 
   <!-- Modal -->
   <div id="elementModal" class="modal">
@@ -69,6 +107,7 @@
       <p><strong>Period:</strong> <span id="modal-period"></span></p>
     </div>
   </div>
+
 
   <script src="script.js"></script>
 </body>

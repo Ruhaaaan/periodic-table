@@ -8,6 +8,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const modal = document.getElementById("elementModal");
       const closeBtn = document.querySelector(".close");
       const themeToggle = document.getElementById("themeToggle");
+      const body = document.body;
+      const moonIcon = document.getElementById("moonIcon");
+      const sunIcon = document.getElementById("sunIcon");
 
       // Add group numbers 1–18
 // Group numbers
@@ -30,18 +33,32 @@ for (let i = 1; i <= 7; i++) {
 
 
       // Toggle dark mode
-      themeToggle.addEventListener("click", () => {
-        document.body.classList.toggle("dark");
-        themeToggle.textContent = document.body.classList.contains("dark")
-          ? "☀️ Light Mode"
-          : "🌙 Dark Mode";
-      });
+      // Set initial icon based on theme
+function updateThemeIcon() {
+  if (body.classList.contains("dark")) {
+    sunIcon.style.display = "";
+    moonIcon.style.display = "none";
+  } else {
+    sunIcon.style.display = "none";
+    moonIcon.style.display = "";
+  }
+}
+
+themeToggle.addEventListener("click", () => {
+  body.classList.toggle("dark");
+  updateThemeIcon();
+});
+
+// Set icon on load
+updateThemeIcon();
 
       // Render elements
       data.forEach(el => {
         const elementDiv = document.createElement("div");
         elementDiv.classList.add("element");
         elementDiv.setAttribute("data-category", el.category);
+        elementDiv.setAttribute("data-group", el.group);     // <-- ADD THIS
+        elementDiv.setAttribute("data-period", el.period);   // <-- ADD THIS
         elementDiv.style.gridColumnStart = el.group;
         elementDiv.style.gridRowStart = el.period;
         
@@ -73,27 +90,25 @@ for (let i = 1; i <= 7; i++) {
       });
 
       // Filter + hover focus
-      document.querySelectorAll(".filters button").forEach(btn => {
-
-        // Hover focus effect
-        btn.addEventListener("mouseenter", () => {
-          const type = btn.getAttribute("data-filter");
-          document.querySelectorAll(".element").forEach(el => {
-            const category = el.getAttribute("data-category");
-            if (type === "all" || category === type) {
-              el.classList.remove("dimmed");
-            } else {
-              el.classList.add("dimmed");
-            }
-          });
-        });
-
-        btn.addEventListener("mouseleave", () => {
-          document.querySelectorAll(".element").forEach(el => {
-            el.classList.remove("dimmed");
-          });
-        });
-      });
+document.querySelectorAll('.filters button').forEach(btn => {
+  btn.addEventListener('mouseenter', () => {
+    const cat = btn.getAttribute('data-filter');
+    document.querySelectorAll('.element').forEach(el => {
+      if (cat === 'all' || el.dataset.category === cat) {
+        el.classList.add('focused');
+        el.classList.remove('blurred');
+      } else {
+        el.classList.remove('focused');
+        el.classList.add('blurred');
+      }
+    });
+  });
+  btn.addEventListener('mouseleave', () => {
+    document.querySelectorAll('.element').forEach(el => {
+      el.classList.remove('focused', 'blurred');
+    });
+  });
+});
 
       // Close modal
       closeBtn.onclick = () => {
@@ -105,35 +120,82 @@ for (let i = 1; i <= 7; i++) {
           modal.style.display = "none";
         }
       };
-    });
-});
 
-// 🔍 Search input
-const searchInput = document.getElementById("searchInput");
-searchInput.addEventListener("input", () => {
-  const search = searchInput.value.toLowerCase();
-  document.querySelectorAll(".element").forEach(el => {
-    const symbol = el.querySelector(".symbol").textContent.toLowerCase();
-    const number = el.querySelector(".number").textContent;
-    const name = el.querySelector(".name")?.textContent.toLowerCase() || '';
-    if (
-      symbol.includes(search) ||
-      name.includes(search) ||
-      number.includes(search)
-    ) {
-      el.style.display = "block";
-    } else {
-      el.style.display = "none";
-    }
+      // After rendering elements, add:
+function setupFocusBlur() {
+  const groupNumbers = document.querySelectorAll('.group-numbers div');
+  const periodNumbers = document.querySelectorAll('.period-numbers div');
+  const allElements = document.querySelectorAll('.element');
+
+  // Group hover
+  groupNumbers.forEach((groupDiv, idx) => {
+    if (idx === 0) return; // skip spacer
+    groupDiv.addEventListener('mouseenter', () => {
+      const group = idx;
+      let found = false;
+      allElements.forEach(el => {
+        if (parseInt(el.dataset.group) === group) found = true;
+      });
+      if (!found) return; // don't blur if no match
+      allElements.forEach(el => {
+        if (parseInt(el.dataset.group) === group) {
+          el.classList.add('focused');
+          el.classList.remove('blurred');
+        } else {
+          el.classList.add('blurred');
+          el.classList.remove('focused');
+        }
+      });
+    });
+    groupDiv.addEventListener('mouseleave', () => {
+      allElements.forEach(el => {
+        el.classList.remove('focused', 'blurred');
+      });
+    });
   });
+
+  // Period hover
+  periodNumbers.forEach((periodDiv, idx) => {
+    const period = idx + 1;
+    let found = false;
+    periodDiv.addEventListener('mouseenter', () => {
+      allElements.forEach(el => {
+        if (parseInt(el.dataset.period) === period) found = true;
+      });
+      if (!found) return;
+      allElements.forEach(el => {
+        if (parseInt(el.dataset.period) === period) {
+          el.classList.add('focused');
+          el.classList.remove('blurred');
+        } else {
+          el.classList.add('blurred');
+          el.classList.remove('focused');
+        }
+      });
+    });
+    periodDiv.addEventListener('mouseleave', () => {
+      allElements.forEach(el => {
+        el.classList.remove('focused', 'blurred');
+      });
+    });
+  });
+}
+
+  // Call this after you render all elements
+  setupFocusBlur();
+
+    });
 });
 
 // 🌡 Heatmap by atomic number (you can change to atomicMass later)
 const heatmapToggle = document.getElementById("heatmapToggle");
+const body = document.body;
+
 let heatmapActive = false;
 
 heatmapToggle.addEventListener("click", () => {
   heatmapActive = !heatmapActive;
+  body.classList.toggle("heatmap-active", heatmapActive);
   document.querySelectorAll(".element").forEach(el => {
     const num = parseFloat(el.querySelector(".number").textContent);
     const normalized = num / 118;
@@ -143,3 +205,15 @@ heatmapToggle.addEventListener("click", () => {
     el.classList.toggle("heatmap", heatmapActive);
   });
 });
+
+  const searchToggle = document.getElementById("searchToggle");
+  const searchInput = document.getElementById("searchInput");
+
+  // Focus input when hovering or clicking the search area
+  document.querySelector('.top-left-search').addEventListener('mouseenter', () => {
+    setTimeout(() => searchInput.focus(), 200);
+  });
+
+  // (Optional) Add your search logic here
+  // searchInput.addEventListener('input', (e) => { ... });
+
