@@ -1,0 +1,290 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #f4f4f9;
+  color: #222;
+  padding: 2rem;
+  text-align: center;
+}
+
+h1 {
+  margin-bottom: 2rem;
+  font-size: 2.5rem;
+}
+
+.periodic-wrapper,
+.grid-container {
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 0;
+}
+
+.periodic-table {
+  display: grid;
+  grid-template-columns: repeat(18, 60px);
+  grid-template-rows: repeat(10, 60px);
+  gap: 6px;
+  justify-content: center;
+  padding: 10px;
+}
+
+.periodic-table.bottom {
+  grid-template-columns: repeat(15, 70px);
+  gap: 10px;
+}
+
+.bottom-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.row-label {
+  width: 70px;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* .element {
+  width: 70px;
+  height: 70px;
+  border-radius: 10px;
+  border: 2px solid #ccc;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 4px;
+  box-sizing: border-box;
+  transition: transform 0.2s ease, filter 0.3s ease;
+  cursor: pointer;
+} */
+
+.element {
+  width: 60px;
+  height: 60px;
+  font-size: 0.7rem;
+  padding: 2px;
+}
+
+.element:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+.element .number {
+  font-size: 0.7rem;
+}
+.element .symbol {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+/* Consistent category-based color (light & dark) */
+.element[data-category="alkali-metal"]           { background: #ff6666; color: #000; }
+.element[data-category="alkaline-earth-metal"]   { background: #ffdead; color: #000; }
+.element[data-category="transition-metal"]       { background: #ffc966; color: #000; }
+.element[data-category="post-transition-metal"]  { background: #cccccc; color: #000; }
+.element[data-category="metalloid"]              { background: #adebad; color: #000; }
+.element[data-category="nonmetal"]               { background: #99ccff; color: #000; }
+.element[data-category="halogen"]                { background: #ffb3e6; color: #000; }
+.element[data-category="noble-gas"]              { background: #b3e0ff; color: #000; }
+.element[data-category="lanthanide"]             { background: #dda0dd; color: #000; }
+.element[data-category="actinide"]               { background: #ffb380; color: #000; }
+.element[data-category="unknown"]                { background: #e0e0e0; color: #000; }
+
+.dimmed {
+  filter: grayscale(90%) opacity(0.3);
+  transform: scale(0.95);
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 10px 0 20px;
+}
+
+.filters button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  color: #fff;
+  cursor: default;
+  transition: transform 0.2s;
+}
+
+/* Same button colors as element categories */
+.filters [data-filter="alkali-metal"]           { background: #ff6666; }
+.filters [data-filter="alkaline-earth-metal"]   { background: #ffdead; color: #000; }
+.filters [data-filter="transition-metal"]       { background: #ffc966; color: #000; }
+.filters [data-filter="post-transition-metal"]  { background: #cccccc; color: #000; }
+.filters [data-filter="metalloid"]              { background: #adebad; color: #000; }
+.filters [data-filter="nonmetal"]               { background: #99ccff; color: #000; }
+.filters [data-filter="halogen"]                { background: #ffb3e6; color: #000; }
+.filters [data-filter="noble-gas"]              { background: #b3e0ff; color: #000; }
+.filters [data-filter="lanthanide"]             { background: #dda0dd; color: #000; }
+.filters [data-filter="actinide"]               { background: #ffb380; color: #000; }
+.filters [data-filter="all"]                    { background: #444; }
+
+.filters button:hover {
+  transform: scale(1.05);
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 99;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+}
+.modal-content {
+  background: white;
+  margin: 10% auto;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 400px;
+  animation: fadeIn 0.3s ease;
+  text-align: left;
+  position: relative;
+}
+.modal .close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Theme toggle */
+#themeToggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 8px 12px;
+  background: #222;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* DARK MODE — only darken body, not colors */
+body.dark {
+  background: #121212;
+  color: #f0f0f0;
+}
+
+body.dark .modal-content {
+  background: #1e1e1e;
+  color: white;
+}
+
+.bottom-tables {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 0;
+}
+
+.labelled-row {
+  display: grid;
+  grid-template-columns: 140px 1050px; /* label + 15 elements × 70px */
+  justify-content: center;
+  align-items: center;
+}
+
+.row-label {
+  font-weight: bold;
+  text-align: center;
+    width: 50px;
+  font-size: 0.75rem;
+}
+
+.periodic-table.lan-act {
+  grid-template-columns: repeat(15, 60px);
+  gap: 6px;
+}
+
+.grid-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.group-numbers {
+  display: grid;
+  grid-template-columns: 50px repeat(18, 60px); /* left offset + groups */
+  gap: 6px;
+  font-size: 0.75rem;
+  color: #444;
+  margin-bottom: 5px;
+}
+
+.group-numbers::before {
+  content: ""; /* Align group numbers with grid */
+  width: 60px;
+}
+
+.periodic-table-with-labels {
+  display: flex;
+  align-items: flex-start;
+}
+
+.period-numbers {
+  display: grid;
+  grid-template-rows: repeat(7, 60px);
+  gap: 6px;
+  width: 50px;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: bold;
+  margin-right: 6px;
+}
+
+body.dark .group-numbers,
+body.dark .period-numbers {
+  color: #ccc;
+}
+
+.group-numbers div:hover,
+.period-numbers div:hover {
+  background-color: #444;
+  color: #fff;
+  border-radius: 6px;
+  transform: scale(1.05);
+  transition: 0.2s ease;
+  cursor: default;
+}
+
+body.dark .group-numbers div:hover,
+body.dark .period-numbers div:hover {
+  background-color: #ddd;
+  
+}
+
+@media (max-width: 768px) {
+  .element {
+    width: 40px;
+    height: 40px;
+    font-size: 0.6rem;
+  }
+  .element .symbol {
+    font-size: 1rem;
+  }
+  .group-numbers,
+  .period-numbers {
+    font-size: 0.65rem;
+  }
+}
+

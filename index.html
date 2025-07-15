@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interactive Periodic Table</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <h1>Interactive Periodic Table</h1>
+    <div class="controls">
+      <button id="themeToggle">🌙 Dark Mode</button>
+      <button id="heatmapToggle">🧪 Toggle Atomic Mass Heatmap</button>
+      <input type="text" id="searchInput" placeholder="Search by name, symbol, or atomic number" />
+    </div>
+  </header>
+
+<div class="grid-container">
+  <div class="group-numbers"></div>
+
+  <div class="periodic-table-with-labels">
+    <div class="period-numbers"></div>
+
+<div class="periodic-wrapper">
+  <!-- MAIN GRID -->
+  <div class="periodic-table" id="table"></div>
+
+  <!-- CATEGORY BUTTONS UNDER MAIN TABLE -->
+  <div class="filters">
+    <button data-filter="all">All</button>
+    <button data-filter="alkali-metal">Alkali Metals</button>
+    <button data-filter="alkaline-earth-metal">Alkaline Earth Metals</button>
+    <button data-filter="transition-metal">Transition Metals</button>
+    <button data-filter="post-transition-metal">Post-Transition Metals</button>
+    <button data-filter="metalloid">Metalloids</button>
+    <button data-filter="nonmetal">Nonmetals</button>
+    <button data-filter="halogen">Halogens</button>
+    <button data-filter="noble-gas">Noble Gases</button>
+    <button data-filter="lanthanide">Lanthanides</button>
+    <button data-filter="actinide">Actinides</button>
+  </div>
+
+  <!-- CLOSELY ALIGNED LANTHANIDES & ACTINIDES -->
+  <div class="bottom-section">
+    <div class="row-label">57–71</div>
+    <div class="periodic-table bottom" id="lanthanides"></div>
+  </div>
+
+  <div class="bottom-section">
+    <div class="row-label">89–103</div>
+    <div class="periodic-table bottom" id="actinides"></div>
+  </div>
+</div>
+
+
+  <!-- Modal -->
+  <div id="elementModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2 id="modal-name"></h2>
+      <p><strong>Symbol:</strong> <span id="modal-symbol"></span></p>
+      <p><strong>Atomic Number:</strong> <span id="modal-number"></span></p>
+      <p><strong>Atomic Mass:</strong> <span id="modal-mass"></span></p>
+      <p><strong>Category:</strong> <span id="modal-category"></span></p>
+      <p><strong>Group:</strong> <span id="modal-group"></span></p>
+      <p><strong>Period:</strong> <span id="modal-period"></span></p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
