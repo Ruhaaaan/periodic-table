@@ -18,7 +18,7 @@ A visually interactive and responsive periodic table web app built with HTML, CS
 
 ## 📂 File Structure
 
-
+```
 📁 root
 ├── index.html # Main HTML page
 ├── style.css # Styling for layout, categories, themes
@@ -28,7 +28,7 @@ A visually interactive and responsive periodic table web app built with HTML, CS
 ├── elements.css # Element Page Styling for layout, categories, themes
 ├── elements.html # Main Element HTML page
 └── README.md # Project overview
-
+```
 
 
 
