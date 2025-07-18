@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Element Details</title>
+  <link rel="stylesheet" href="element.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+   <header class="page-header">
+    <div class="logo-title">
+    <img src="atom.svg" alt="Atomic Icon" class="atomic-icon" />
+    <h1>Interactive Periodic Table</h1>
+    
+  </div>
+
+    <div class="controls">
+<div class="top-right-controls">
+  <button id="themeToggle" aria-label="Toggle theme">
+    <span id="themeIcon">
+      <!-- Moon SVG (default, for light mode) -->
+      <svg id="moonIcon" width="28" height="28" viewBox="0 0 24 24" fill="none">
+        <path d="M21 12.79A9 9 0 0111.21 3a7 7 0 100 18 9 9 0 009.79-8.21z" fill="#222"/>
+      </svg>
+      <!-- Sun SVG (hidden by default) -->
+      <svg id="sunIcon" width="28" height="28" viewBox="0 0 24 24" fill="none" style="display:none;">
+        <circle cx="12" cy="12" r="5" fill="#FFD600"/>
+        <g stroke="#FFD600" stroke-width="2">
+          <line x1="12" y1="1" x2="12" y2="4"/>
+          <line x1="12" y1="20" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="4" y2="12"/>
+          <line x1="20" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </g>
+      </svg>
+    </span>
+  </button>
+</div>
+
+  </header>
+  <!-- Moved here -->
+  <a href="index.html" class="back-btn">← Back to Periodic Table</a>
+
+  <div id="element-info"></div>
+  <script src="element.js"></script>
+  </div>
+
+
+</body>
+</html>

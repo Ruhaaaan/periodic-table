@@ -2,15 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=0.8,user-scalable=no" />
   <title>Interactive Periodic Table</title>
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <header>
+
+  <header class="page-header">
+    <div class="logo-title">
+    <img src="atom.svg" alt="Atomic Icon" class="atomic-icon" />
     <h1>Interactive Periodic Table</h1>
+    
+  </div>
+
     <div class="controls">
 <div class="top-right-controls">
   <button id="themeToggle" aria-label="Toggle theme">
@@ -61,7 +67,9 @@
       <div class="group-numbers"></div>
       <div class="periodic-table-with-labels">
         <div class="period-numbers"></div>
+        <div class="table-container">
         <div class="periodic-table" id="table"></div>
+        </div>
       </div>
     </div>
 
@@ -69,8 +77,8 @@
     <div class="f-block-wrapper">
       <div class="f-block-horizontal">
         <div class="f-block-labels">
-          <div class="f-block-label">* Lanthanides</div>
-          <div class="f-block-label">** Actinides</div>
+          <div class="f-block-label-lan">* Lanthanides</div>
+          <div class="f-block-label-act">** Actinides</div>
         </div>
         <div class="f-block-rows">
           <div class="f-block-row" id="lanthanides"></div>
@@ -79,20 +87,22 @@
       </div>
     </div>
 
-    <div class="filters">
-      
-      <button data-filter="alkali-metal">Alkali Metals</button>
-      <button data-filter="alkaline-earth-metal">Alkaline Earth Metals</button>
-      <button data-filter="transition-metal">Transition Metals</button>
-      <button data-filter="post-transition-metal">Post-Transition Metals</button>
-      <button data-filter="metalloid">Metalloids</button>
-      <button data-filter="nonmetal">Nonmetals</button>
-      <button data-filter="halogen">Halogens</button>
-      <button data-filter="noble-gas">Noble Gases</button>
-      <button data-filter="lanthanide">Lanthanides</button>
-      <button data-filter="actinide">Actinides</button>
-    </div>
+<div class="filters">
+  <button data-filter="alkali metal">Alkali Metals</button>
+  <button data-filter="alkaline earth metal">Alkaline Earth Metals</button>
+  <button data-filter="transition metal">Transition Metals</button>
+  <button data-filter="post-transition metal">Post-Transition Metals</button>
+  <button data-filter="metalloid">Metalloids</button>
+  <button data-filter="other-nonmetal">Other Nonmetals</button>
+  <button data-filter="halogen">Halogens</button>
+  <button data-filter="noble gas">Noble Gases</button>
+  <button data-filter="lanthanide">Lanthanides</button>
+  <button data-filter="actinide">Actinides</button>
+  
+</div>
   </div>
+
+   
 
   <!-- Modal -->
   <div id="elementModal" class="modal">
@@ -108,7 +118,20 @@
     </div>
   </div>
 
+<div id="hover-large-info" class="info-card" style="display: none; position: absolute;">
+  <div class="info-card-symbol">H</div>
+  <div class="info-card-details">
+    <div class="info-title">Hydrogen</div>
+    <div class="info-item">Discovered: Unknown</div>
+    <div class="info-item">Atomic Mass: 1.008</div>
+    <div class="info-item">Electron Shells: 1</div>
+    <div class="info-item">Config: 1s1</div>
+  </div>
+</div>
+
+
 
   <script src="script.js"></script>
 </body>
 </html>
+

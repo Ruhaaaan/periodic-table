@@ -1,219 +1,220 @@
+// script.js
+
+
+
 document.addEventListener("DOMContentLoaded", () => {
+  const table = document.getElementById("table");
+  const lanthanides = document.getElementById("lanthanides");
+  const actinides = document.getElementById("actinides");
+  const modal = document.getElementById("elementModal");
+  const closeBtn = document.querySelector(".close");
+  const themeToggle = document.getElementById("themeToggle");
+  const moonIcon = document.getElementById("moonIcon");
+  const sunIcon = document.getElementById("sunIcon");
+  const heatmapToggle = document.getElementById("heatmapToggle");
+  const searchToggle = document.getElementById("searchToggle");
+  const searchInput = document.getElementById("searchInput");
+  const largeInfoCard = document.getElementById("hover-large-info");
+  const body = document.body;
+
+  let heatmapActive = false;
+
+  const updateThemeIcon = () => {
+    const isDark = body.classList.contains("dark");
+    sunIcon.style.display = isDark ? "" : "none";
+    moonIcon.style.display = isDark ? "none" : "";
+  };
+
+  const isVisible = el => !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
+
+  const groupRow = document.querySelector(".group-numbers");
+  groupRow.innerHTML = '<div></div>'; // Spacer
+  for (let i = 1; i <= 18; i++) {
+    const div = document.createElement("div");
+    div.textContent = i;
+    groupRow.appendChild(div);
+  }
+
+  const periodCol = document.querySelector(".period-numbers");
+  for (let i = 1; i <= 7; i++) {
+    const div = document.createElement("div");
+    div.textContent = i;
+    periodCol.appendChild(div);
+  }
+
   fetch("elements.json")
     .then(res => res.json())
     .then(data => {
-      const mainTable = document.getElementById("table");
-      const lanthanides = document.getElementById("lanthanides");
-      const actinides = document.getElementById("actinides");
-      const modal = document.getElementById("elementModal");
-      const closeBtn = document.querySelector(".close");
-      const themeToggle = document.getElementById("themeToggle");
-      const body = document.body;
-      const moonIcon = document.getElementById("moonIcon");
-      const sunIcon = document.getElementById("sunIcon");
-
-      // Add group numbers 1–18
-// Group numbers
-const groupRow = document.querySelector(".group-numbers");
-groupRow.innerHTML = '<div></div>'; // Spacer for alignment
-for (let i = 1; i <= 18; i++) {
-  const label = document.createElement("div");
-  label.textContent = i;
-  groupRow.appendChild(label);
-}
-
-// Render period numbers
-const periodCol = document.querySelector(".period-numbers");
-for (let i = 1; i <= 7; i++) {
-  const label = document.createElement("div");
-  label.textContent = i;
-  periodCol.appendChild(label);
-}
-
-
-
-      // Toggle dark mode
-      // Set initial icon based on theme
-function updateThemeIcon() {
-  if (body.classList.contains("dark")) {
-    sunIcon.style.display = "";
-    moonIcon.style.display = "none";
-  } else {
-    sunIcon.style.display = "none";
-    moonIcon.style.display = "";
-  }
-}
-
-themeToggle.addEventListener("click", () => {
-  body.classList.toggle("dark");
-  updateThemeIcon();
-});
-
-// Set icon on load
-updateThemeIcon();
-
-      // Render elements
-      data.forEach(el => {
+      data.elements.forEach(el => {
         const elementDiv = document.createElement("div");
         elementDiv.classList.add("element");
-        elementDiv.setAttribute("data-category", el.category);
-        elementDiv.setAttribute("data-group", el.group);     // <-- ADD THIS
-        elementDiv.setAttribute("data-period", el.period);   // <-- ADD THIS
-        elementDiv.style.gridColumnStart = el.group;
-        elementDiv.style.gridRowStart = el.period;
-        
+        elementDiv.dataset.category = el.category;
+        elementDiv.dataset.group = el.group;
+        elementDiv.dataset.period = el.period;
+        elementDiv.dataset.symbol = el.symbol;
+        elementDiv.dataset.number = el.number;
+        elementDiv.dataset.name = el.name;
+        elementDiv.dataset.atomic_mass = el.atomic_mass;
+        elementDiv.dataset.discovered_by = el.discovered_by || "Unknown";
+        elementDiv.dataset.shells = el.shells?.join(', ') || "N/A";
+        elementDiv.dataset.electron_configuration = el.electron_configuration || "N/A";
+
         elementDiv.innerHTML = `
-          <span class="number">${el.atomicNumber}</span>
+          <span class="number">${el.number}</span>
           <span class="symbol">${el.symbol}</span>
         `;
 
-        // Place in correct section
-        if (el.category === "lanthanide") {
-            lanthanides.appendChild(elementDiv);
-        } else if (el.category === "actinide") {
-            actinides.appendChild(elementDiv);
-        } else {
-            mainTable.appendChild(elementDiv);
-            }
+        elementDiv.style.gridColumnStart = el.group;
+        elementDiv.style.gridRowStart = el.period;
 
-        // Open modal on click
+        if (el.category === "lanthanide") {
+          lanthanides.appendChild(elementDiv);
+        } else if (el.category === "actinide") {
+          actinides.appendChild(elementDiv);
+        } else {
+          table.appendChild(elementDiv);
+        }
+
         elementDiv.addEventListener("click", () => {
-          document.getElementById("modal-name").textContent = el.name;
-          document.getElementById("modal-symbol").textContent = el.symbol;
-          document.getElementById("modal-number").textContent = el.atomicNumber;
-          document.getElementById("modal-mass").textContent = el.atomicMass;
-          document.getElementById("modal-category").textContent = el.category;
-          document.getElementById("modal-group").textContent = el.group;
-          document.getElementById("modal-period").textContent = el.period;
-          modal.style.display = "block";
+          window.location.href = `element.html?atomicNumber=${el.number}`;
+        });
+
+        elementDiv.addEventListener("mouseenter", () => {
+          
+          
+          largeInfoCard.querySelector(".info-card-symbol").textContent = el.symbol;
+          largeInfoCard.querySelector(".info-title").textContent = el.name;
+          largeInfoCard.querySelectorAll(".info-item")[0].textContent = `Discovered: ${el.discovered_by || "Unknown"}`;
+          largeInfoCard.querySelectorAll(".info-item")[1].textContent = `Atomic Mass: ${el.atomic_mass}`;
+          largeInfoCard.querySelectorAll(".info-item")[2].textContent = `Electron Shells: ${el.shells?.join(', ') || "N/A"}`;
+          largeInfoCard.querySelectorAll(".info-item")[3].textContent = `Config: ${el.electron_configuration || "N/A"}`;
+          
+          const bgColor = categoryColors[el.category] || "#ddd";
+          largeInfoCard.style.backgroundColor = bgColor;
+          
+          largeInfoCard.style.display = "block";
+          largeInfoCard.style.top = "200px";
+          largeInfoCard.style.left = "50%";
+          largeInfoCard.style.transform = "translateX(-50%)";
+        });
+
+        document.querySelectorAll('.filters button').forEach(btn => {
+            btn.addEventListener('mouseenter', () => {
+              const cat = btn.getAttribute('data-filter');
+              document.querySelectorAll('.element').forEach(el => {
+                if (cat === 'all' || el.dataset.category === cat) {
+                  el.classList.add('focused');
+                  el.classList.remove('blurred');
+                } else {
+                  el.classList.remove('focused');
+                  el.classList.add('blurred');
+                }
+              });
+            });
+            btn.addEventListener('mouseleave', () => {
+              document.querySelectorAll('.element').forEach(el => {
+                el.classList.remove('focused', 'blurred');
+              });
+            });
+          });
+
+        elementDiv.addEventListener("mouseleave", () => {
+          largeInfoCard.style.display = "none";
         });
       });
 
-      // Filter + hover focus
-document.querySelectorAll('.filters button').forEach(btn => {
-  btn.addEventListener('mouseenter', () => {
-    const cat = btn.getAttribute('data-filter');
-    document.querySelectorAll('.element').forEach(el => {
-      if (cat === 'all' || el.dataset.category === cat) {
-        el.classList.add('focused');
-        el.classList.remove('blurred');
-      } else {
-        el.classList.remove('focused');
-        el.classList.add('blurred');
-      }
+      addGroupPeriodHover();
+    });
+
+  themeToggle.addEventListener("click", () => {
+    body.classList.toggle("dark");
+    updateThemeIcon();
+  });
+  updateThemeIcon();
+
+  
+
+
+  heatmapToggle.addEventListener("click", () => {
+    heatmapActive = !heatmapActive;
+    body.classList.toggle("heatmap-active", heatmapActive);
+    document.querySelectorAll(".element").forEach(el => {
+      const num = parseInt(el.dataset.number);
+      const normalized = num / 118;
+      const intensity = Math.floor(normalized * 255);
+      el.style.backgroundColor = heatmapActive
+        ? `rgb(255, ${255 - intensity}, ${255 - intensity})`
+        : "";
     });
   });
-  btn.addEventListener('mouseleave', () => {
-    document.querySelectorAll('.element').forEach(el => {
-      el.classList.remove('focused', 'blurred');
+
+  searchToggle.addEventListener("mouseenter", () => {
+    setTimeout(() => {
+      if (!searchInput.disabled && isVisible(searchInput)) {
+        searchInput.focus();
+      }
+    }, 200);
+  });
+
+  searchToggle.addEventListener("click", () => {
+    if (!searchInput.disabled && isVisible(searchInput)) {
+      searchInput.focus();
+    }
+  });
+
+  searchToggle.addEventListener("mouseleave", () => {
+    if (document.activeElement === searchInput) {
+      searchInput.blur();
+    }
+  });
+
+  searchInput.addEventListener("input", () => {
+    const query = searchInput.value.toLowerCase();
+    document.querySelectorAll(".element").forEach(el => {
+      const symbol = el.dataset.symbol.toLowerCase();
+      const name = el.dataset.name?.toLowerCase();
+      const number = el.dataset.number;
+      const match = symbol.includes(query) || name.includes(query) || number === query;
+      el.style.display = match ? "flex" : "none";
     });
   });
 });
 
-      // Close modal
-      closeBtn.onclick = () => {
-        modal.style.display = "none";
-      };
+function addGroupPeriodHover() {
+  const elements = document.querySelectorAll(".element");
+  const groupLabels = document.querySelectorAll(".group-numbers div:not(:first-child)");
+  const periodLabels = document.querySelectorAll(".period-numbers div");
 
-      window.onclick = event => {
-        if (event.target === modal) {
-          modal.style.display = "none";
-        }
-      };
-
-      // After rendering elements, add:
-function setupFocusBlur() {
-  const groupNumbers = document.querySelectorAll('.group-numbers div');
-  const periodNumbers = document.querySelectorAll('.period-numbers div');
-  const allElements = document.querySelectorAll('.element');
-
-  // Group hover
-  groupNumbers.forEach((groupDiv, idx) => {
-    if (idx === 0) return; // skip spacer
-    groupDiv.addEventListener('mouseenter', () => {
-      const group = idx;
-      let found = false;
-      allElements.forEach(el => {
-        if (parseInt(el.dataset.group) === group) found = true;
-      });
-      if (!found) return; // don't blur if no match
-      allElements.forEach(el => {
-        if (parseInt(el.dataset.group) === group) {
-          el.classList.add('focused');
-          el.classList.remove('blurred');
-        } else {
-          el.classList.add('blurred');
-          el.classList.remove('focused');
-        }
+  groupLabels.forEach((label, idx) => {
+    const group = idx + 1;
+    label.addEventListener("mouseenter", () => {
+      elements.forEach(el => {
+        el.classList.toggle("focused", el.dataset.group == group);
+        el.classList.toggle("blurred", el.dataset.group != group);
       });
     });
-    groupDiv.addEventListener('mouseleave', () => {
-      allElements.forEach(el => {
-        el.classList.remove('focused', 'blurred');
+    label.addEventListener("mouseleave", () => {
+      elements.forEach(el => {
+        el.classList.remove("focused", "blurred");
       });
     });
   });
 
-  // Period hover
-  periodNumbers.forEach((periodDiv, idx) => {
+  periodLabels.forEach((label, idx) => {
     const period = idx + 1;
-    let found = false;
-    periodDiv.addEventListener('mouseenter', () => {
-      allElements.forEach(el => {
-        if (parseInt(el.dataset.period) === period) found = true;
-      });
-      if (!found) return;
-      allElements.forEach(el => {
-        if (parseInt(el.dataset.period) === period) {
-          el.classList.add('focused');
-          el.classList.remove('blurred');
-        } else {
-          el.classList.add('blurred');
-          el.classList.remove('focused');
-        }
+    label.addEventListener("mouseenter", () => {
+      elements.forEach(el => {
+        el.classList.toggle("focused", el.dataset.period == period);
+        el.classList.toggle("blurred", el.dataset.period != period);
       });
     });
-    periodDiv.addEventListener('mouseleave', () => {
-      allElements.forEach(el => {
-        el.classList.remove('focused', 'blurred');
+    label.addEventListener("mouseleave", () => {
+      elements.forEach(el => {
+        el.classList.remove("focused", "blurred");
       });
     });
   });
 }
 
-  // Call this after you render all elements
-  setupFocusBlur();
 
-    });
-});
-
-// 🌡 Heatmap by atomic number (you can change to atomicMass later)
-const heatmapToggle = document.getElementById("heatmapToggle");
-const body = document.body;
-
-let heatmapActive = false;
-
-heatmapToggle.addEventListener("click", () => {
-  heatmapActive = !heatmapActive;
-  body.classList.toggle("heatmap-active", heatmapActive);
-  document.querySelectorAll(".element").forEach(el => {
-    const num = parseFloat(el.querySelector(".number").textContent);
-    const normalized = num / 118;
-    const intensity = Math.floor(normalized * 255);
-    const bgColor = `rgb(255, ${255 - intensity}, ${255 - intensity})`;
-    el.style.backgroundColor = heatmapActive ? bgColor : "";
-    el.classList.toggle("heatmap", heatmapActive);
-  });
-});
-
-  const searchToggle = document.getElementById("searchToggle");
-  const searchInput = document.getElementById("searchInput");
-
-  // Focus input when hovering or clicking the search area
-  document.querySelector('.top-left-search').addEventListener('mouseenter', () => {
-    setTimeout(() => searchInput.focus(), 200);
-  });
-
-  // (Optional) Add your search logic here
-  // searchInput.addEventListener('input', (e) => { ... });
 
